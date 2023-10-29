@@ -30,10 +30,10 @@ MOP2M: dict[str, str] = P2M | M2M | defaultdict(lambda: "-")   # InterpreterSton
 
 # left, right and center
 formatted_separator: dict[str, Callable[[int], str]] = {
-	":-"  : lambda size= 0 : f":-{(size-2)*'-'}",
-	"-:"  : lambda size= 0 : f"{(size-2)*'-'}-:",
-	":-:" : lambda size= 0 : f":-{(size-3)*'-'}:",
-	"-"   : lambda size= 0 : f"{size*'-'}"
+	":-"  : lambda size : f":-{(size-2)*'-'}",
+	"-:"  : lambda size : f"{(size-2)*'-'}-:",
+	":-:" : lambda size : f":-{(size-3)*'-'}:",
+	"-"   : lambda size : f"-{(size-1)*'-'}"
 }
 
 
@@ -110,25 +110,21 @@ def formatted_table(
 	if not len(entry_table):
 		return ""
 
-	def format_markdown_header(
-			header:tuple[str, ...]
-		) ->Iterator[tuple[str, ...]]:
+	def yielder() -> Iterator[tuple[str, ...]]:
+		header, data = entry_table[0], entry_table[1:]
 		yield header
 		yield tuple(
 				formatted_separator[P2M[Align[i]]](size)
 				for i, size in enumerate(map(len, header))
 			)
-
-	def yielder() -> Iterator[tuple[str, ...]]:
-		yield from format_markdown_header(entry_table[0])
-		yield from entry_table[1:]
+		yield from data
 
 	return lib.bind(yielder(), CS="|", CF=" {} ", RF = "|{}|")
 
 
 def unformatted_table(
 		data: Iterable[Iterable[Any]],
-		default_alignment: str = "^",
+		default_alignment: str = "-",
 		*column_alignment: str,
 		# out of order colum alignment options
 		columns_alignment: dict[int, str] = {},
@@ -164,18 +160,14 @@ def unformatted_table(
 	if not len(entry_table):
 		return ""
 
-	def format_markdown_header(
-			header:tuple[str, ...]
-		) ->Iterator[tuple[str, ...]]:
+	def yielder() -> Iterator[tuple[str, ...]]:
+		header, data = entry_table[0], entry_table[1:]
 		yield header
 		yield tuple(
-				formatted_separator[Align[i]](size)
-				for i, size in enumerate(map(len, header))
+				formatted_separator[Align[i]](-1)
+				for i in range(len(header))
 			)
-
-	def yielder() -> Iterator[tuple[str, ...]]:
-		yield from format_markdown_header(entry_table[0])
-		yield from entry_table[1:]
+		yield from data
 
 	return lib.bind(yielder(), CS="|", CF="{}", RF = "|{}|")
 
