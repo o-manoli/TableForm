@@ -1,27 +1,16 @@
-"""
-	TableForm
-
-	format a "matrix" of strings int a table
-
-
-"""
-
-
-from . import __lib__ as lib
 from . import __markdown_table__ as markdown
+from typing import Iterable, Any
+from . import __lib__ as lib
 
-table = markdown.formatted_table
-
-
-def plain_table (
-		data: lib.Iterable[lib.Iterable[lib.Any]],
+def table (
+		data: Iterable[Iterable[Any]],
 		show: bool = False,
 		alignment:str = "^",
 		cell_format: str = "{}",
 		cells_separator:str = " ",
 		cell_padding:str = "",
 		fill: bool = False,
-	) -> str:
+	) -> str | None:
 	"""
 		Just a table with a formatted cell
 	"""
@@ -35,5 +24,6 @@ def plain_table (
 	)
 	if show:
 		print(table)
+		return
 	return table
 
