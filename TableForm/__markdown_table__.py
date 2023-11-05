@@ -68,8 +68,8 @@ def generate_alignment_reference(
 
 def formatted_table(
 		data: Iterable[Iterable[Any]],
-		default_alignment: str = "^",
 		*column_alignment: str,
+		default_alignment: str = "^",
 		# out of order colum alignment options
 		columns_alignment: dict[int, str] = {},
 		header: Iterable[Any] | None = None,
@@ -124,8 +124,8 @@ def formatted_table(
 
 def unformatted_table(
 		data: Iterable[Iterable[Any]],
-		default_alignment: str = "-",
 		*column_alignment: str,
+		default_alignment: str = "-",
 		# out of order colum alignment options
 		columns_alignment: dict[int, str] = {},
 		header: Iterable[Any] | None = None,
